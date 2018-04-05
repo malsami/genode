@@ -3,8 +3,7 @@
 #
 
 if {![have_include power_on/qemu]} {
-
-	puts "Run script is supported only on Qemu"
+	puts "Run script is only supported on Qemu"
 	return 0
 }
 
@@ -208,4 +207,4 @@ for {set i 0} {$i < 3} {incr i 1} {
 }
 append done_string ".*From 10.0.4.1 icmp_seq=.* Destination Unreachable.*\n"
 
-run_genode_until $done_string 10
+run_genode_until $done_string 25
