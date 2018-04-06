@@ -164,11 +164,11 @@ class Terminal::Scancode_tracker
 				case Input::KEY_END:      _last_sequence = "\E[4~";  break;
 				case Input::KEY_PAGEUP:   _last_sequence = "\E[5~";  break;
 				case Input::KEY_PAGEDOWN: _last_sequence = "\E[6~";  break;
-				case Input::KEY_F1:       _last_sequence = "\EOP";  break;
-				case Input::KEY_F2:       _last_sequence = "\EOQ";  break;
-				case Input::KEY_F3:       _last_sequence = "\EOR";  break;
-				case Input::KEY_F4:       _last_sequence = "\EOS";  break;
-				case Input::KEY_F5:       _last_sequence = "\E[[15~";  break;
+				case Input::KEY_F1:       _last_sequence = "\EOP";   break;
+				case Input::KEY_F2:       _last_sequence = "\EOQ";   break;
+				case Input::KEY_F3:       _last_sequence = "\EOR";   break;
+				case Input::KEY_F4:       _last_sequence = "\EOS";   break;
+				case Input::KEY_F5:       _last_sequence = "\E[15~"; break;
 				case Input::KEY_F6:       _last_sequence = "\E[17~"; break;
 				case Input::KEY_F7:       _last_sequence = "\E[18~"; break;
 				case Input::KEY_F8:       _last_sequence = "\E[19~"; break;
