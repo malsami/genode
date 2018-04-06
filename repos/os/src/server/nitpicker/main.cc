@@ -359,6 +359,10 @@ struct Nitpicker::Main : Focus_updater
 
 	Main(Env &env) : _env(env)
 	{
+		/* center initial pointer position */
+		Area const scr_size = _fb_screen->screen.size();
+		_pointer_origin.geometry(Rect(Point(scr_size.w()/2, scr_size.h()/2), Area()));
+
 		_view_stack.default_background(_builtin_background);
 		_view_stack.stack(_pointer_origin);
 		_view_stack.stack(_builtin_background);
