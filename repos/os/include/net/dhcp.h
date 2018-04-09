@@ -196,7 +196,7 @@ class Net::Dhcp_packet
 		};
 
 		/**
-		 * DHCP option that specifies the IP packet lease time in seconds
+		 * DHCP option to request specific option type values from the server
 		 */
 		struct Parameter_request_list : Option
 		{
