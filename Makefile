@@ -50,14 +50,14 @@ endif
 # ================================================================
 # Genode build process. Rebuild subtargets as needed.
 
-CUSTOM_REPOS = $(wildcard genode-*) $(wildcard ../genode-*) toolchain-host hello_tutorial
+CUSTOM_REPOS = $(wildcard genode-*) $(wildcard ../genode-*) toolchain-host 
 
 build_dir:
 #	Create build directory
 	tool/create_builddir $(GENODE_TARGET) BUILD_DIR=$(VAGRANT_GENODE_BUILD_DIR)
 
 #	Uncomment libports and dde_linux from etc/build.conf
-	for repo in libports dde_linux ; do \
+	for repo in libports dde_linux; do \
 		sed -i "/$$repo/s/^#REPOSITORIES/REPOSITORIES/g" $(VAGRANT_BUILD_CONF) ; \
 	done
 
@@ -87,6 +87,11 @@ jenkins_build_dir:
 	for repo in $(CUSTOM_REPOS); do \
 		echo "REPOSITORIES += \$$(GENODE_DIR)/../$$repo" >> $(JENKINS_BUILD_CONF) ; \
 	done
+
+#	Add costum repos within Genode repos
+	for repo in hello_tutorial; do \
+                echo "REPOSITORIES += \$$(GENODE_DIR)/repos/$$repo" >> $(JENKINS_BUILD_CONF) ; \
+        done
 
 #	Speedup of the build process
 ifeq (jenkins, $(USER))
