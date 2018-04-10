@@ -106,7 +106,7 @@ bool Genode::Irq_object::associate(unsigned irq, bool msi,
 		return false;
 	}
 
-	if (l4_error(l4_rcv_ep_bind(_capability(),
+	if (l4_error(l4_rcv_ep_bind_thread(_capability(),
 	                            Interrupt_handler::handler_cap(),
                                     reinterpret_cast<l4_umword_t>(this)))) {
 		error("cannot attach to IRQ ", _irq);
