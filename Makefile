@@ -50,7 +50,7 @@ endif
 # ================================================================
 # Genode build process. Rebuild subtargets as needed.
 
-CUSTOM_REPOS = $(wildcard genode-*) $(wildcard ../genode-*) toolchain-host
+CUSTOM_REPOS = $(wildcard genode-*) $(wildcard ../genode-*) toolchain-host hello_tutorial
 
 build_dir:
 #	Create build directory
