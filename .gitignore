@@ -3,6 +3,7 @@
 *.swp
 *.rej
 
+usr
 /build
 /contrib
 /depot
