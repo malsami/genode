@@ -83,6 +83,11 @@ jenkins_build_dir:
 		sed -i "/$$repo/s/^#REPOSITORIES/REPOSITORIES/g" $(JENKINS_BUILD_CONF) ; \
 	done
 
+#	Comment defautl start with display from etc/build.conf
+	for opt in "-display sdl"; do \
+                sed -i "/$$opt/s/^/#/g" $(JENKINS_BUILD_CONF) ; \
+        done
+
 #	Add our custom repositories to etc/build.conf
 	for repo in $(CUSTOM_REPOS); do \
 		echo "REPOSITORIES += \$$(GENODE_DIR)/../$$repo" >> $(JENKINS_BUILD_CONF) ; \
