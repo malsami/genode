@@ -29,7 +29,7 @@ jenkins: foc jenkins_build_dir
 # ================================================================
 # Genode toolchain. Only needs to be done once per target (x86/arm).
 toolchain:
-	wget -qO- https://nextcloud.os.in.tum.de/s/oHeGQp3rVk5MPpQ | tar xf -
+	wget -qO- https://nextcloud.os.in.tum.de/s/oHeGQp3rVk5MPpQ/download | tar xfJ -
 #
 # ================================================================
 
