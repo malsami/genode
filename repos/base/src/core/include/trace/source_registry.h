@@ -56,6 +56,53 @@ class Genode::Trace::Source
 			Thread_name        name;
 			Execution_time     execution_time;
 			Affinity::Location affinity;
+			unsigned long long start_time;
+			unsigned long long arrival_time;
+			unsigned long long kill_time;
+			unsigned	   prio;
+			unsigned	   id;
+			unsigned	   foc_id;
+			int		   pos_rq;
+			Execution_time	   idle0;
+			Execution_time	   idle1;
+			Execution_time	   idle2;
+			Execution_time	   idle3;
+			bool		   core0_is_online;
+			bool		   core1_is_online;
+			bool		   core2_is_online;
+			bool		   core3_is_online;
+			unsigned	   num_cores;
+			size_t 		   ram_quota;
+			size_t 		   ram_used;
+		};
+		struct Dynamic_Info
+		{
+			Execution_time     execution_time;
+			Affinity::Location affinity;
+			unsigned long long start_time;
+			unsigned long long arrival_time;
+			unsigned long long kill_time;
+			unsigned	   prio;
+			int		   pos_rq;
+		};
+		struct Static_Info
+		{
+			Session_label      label;
+			Thread_name        name;
+			unsigned	   id;
+			unsigned	   foc_id;
+		};
+		struct Global_Info
+		{
+			Execution_time	   idle0;
+			Execution_time	   idle1;
+			Execution_time	   idle2;
+			Execution_time	   idle3;
+			bool		   core0_is_online;
+			bool		   core1_is_online;
+			bool		   core2_is_online;
+			bool		   core3_is_online;
+			unsigned	   num_cores;
 		};
 
 		/**
@@ -64,6 +111,9 @@ class Genode::Trace::Source
 		struct Info_accessor : Interface
 		{
 			virtual Info trace_source_info() const = 0;
+			virtual Dynamic_Info dynamic_info() const = 0;
+			virtual Static_Info static_info() const = 0;
+			virtual Global_Info global_info() const = 0;
 		};
 
 	private:
@@ -74,7 +124,10 @@ class Genode::Trace::Source
 		Dataspace_capability _policy { };
 		Dataspace_capability _buffer { };
 		Source_owner  const *_owner = nullptr;
-
+		unsigned	   id;
+		unsigned	   foc_id;
+		size_t _ram_quota=0;
+		size_t _ram_used=0;
 		static unsigned _alloc_unique_id();
 
 		/*
@@ -96,11 +149,56 @@ class Genode::Trace::Source
 			lock_for_destruction();
 		}
 
+		void set_quota(size_t quota)
+		{
+			_ram_quota=quota;
+		}
+
+		void set_used(size_t quota)
+		{
+			_ram_used=quota;
+		}
+
 		/*************************************
 		 ** Interface used by TRACE service **
 		 *************************************/
 
-		Info const info() const { return _info.trace_source_info(); }
+		Info const info() const 
+		{
+			
+			Info info;
+			Dynamic_Info dyn=_info.dynamic_info();
+			Static_Info stat=_info.static_info();
+			info.label=stat.label;
+			info.name=stat.name;
+			info.id=stat.id;
+			info.foc_id=stat.foc_id;
+			info.execution_time=dyn.execution_time;
+			info.start_time=dyn.start_time;
+			info.arrival_time=dyn.arrival_time;
+			info.kill_time=dyn.kill_time;
+			info.affinity=dyn.affinity;
+			info.prio=dyn.prio;
+			info.ram_quota=_ram_quota;
+			info.ram_used=_ram_used;
+			info.pos_rq=dyn.pos_rq;
+			return info;
+		}
+		Info const sched_info() const
+		{
+			Info info;
+			Global_Info global=_info.global_info();
+			info.idle0=global.idle0;
+			info.idle1=global.idle1;
+			info.idle2=global.idle2;
+			info.idle3=global.idle3;
+			info.core0_is_online=global.core0_is_online;
+			info.core1_is_online=global.core1_is_online;
+			info.core2_is_online=global.core2_is_online;
+			info.core3_is_online=global.core3_is_online;
+			info.num_cores=global.num_cores;
+			return info;
+		}
 
 		void trace(Dataspace_capability policy, Dataspace_capability buffer)
 		{
@@ -172,6 +270,50 @@ class Genode::Trace::Source_registry
 		{
 			Lock::Guard guard(_lock);
 			_entries.remove(entry);
+		}
+
+		void set_quota(size_t _ram_quota, String<160> _label)
+		{
+			Lock::Guard guard(_lock);
+			if(strcmp(_label.string(), "")==0) { _label="core";}
+			Source *entry=_entries.first();
+			Trace::Source::Info info=entry->info();
+			if(strcmp(info.label.string(), _label.string())==0) {
+				entry->set_quota(_ram_quota);	
+			}
+			while(entry->next()!=NULL) {
+				entry=entry->next();
+				info=entry->info();
+				if(strcmp(info.label.string(), _label.string())==0) {
+					entry->set_quota(_ram_quota);
+				}	
+			}
+			if(strcmp(info.label.string(), _label.string())==0) {
+				entry->set_quota(_ram_quota);	
+			}		
+		}
+
+		void set_used(size_t _ram_used, String<160> _label)
+		{
+			Lock::Guard guard(_lock);
+			if(strcmp(_label.string(), "")==0) { _label="core";}
+			Source *entry=_entries.first();
+			Trace::Source::Info info=entry->info();
+			if(strcmp(info.label.string(), _label.string())==0) {
+				entry->set_used(_ram_used);	
+			}
+			while(entry->next()!=NULL) {
+				entry=entry->next();
+				info=entry->info();
+				if(strcmp(info.label.string(), _label.string())==0) {
+					entry->set_used(_ram_used);
+				}	
+			}
+			if(strcmp(info.label.string(), _label.string())==0) {
+				entry->set_used(_ram_used);	
+			}
+			
+			
 		}
 
 

@@ -69,15 +69,17 @@ void Cpu_thread_component::cancel_blocking()
 }
 
 
+// Modification for Checkpoint/Restore (rtcr)
 Thread_state Cpu_thread_component::state()
 {
-	return _platform_thread.state();
+	return _platform_thread.all_regs();
 }
 
 
+// Modification for Checkpoint/Restore (rtcr)
 void Cpu_thread_component::state(Thread_state const &state)
 {
-	_platform_thread.state(state);
+	_platform_thread.all_regs(state);
 }
 
 

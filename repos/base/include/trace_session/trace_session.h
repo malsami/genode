@@ -90,7 +90,11 @@ struct Genode::Trace::Session : Genode::Session
 	 *
 	 * \throw Nonexistent_subject
 	 */
-	virtual Subject_info subject_info(Subject_id) = 0;
+	virtual CPU_info cpu_info(Subject_id) = 0;
+
+	virtual RAM_info ram_info(Subject_id) = 0;
+
+	virtual SCHEDULER_info scheduler_info(Subject_id) = 0;
 
 	/**
 	 * Obtain trace buffer of given subject
@@ -142,8 +146,14 @@ struct Genode::Trace::Session : Genode::Session
 	                 Subject_id);
 	GENODE_RPC_THROW(Rpc_subjects, size_t, subjects,
 	                 GENODE_TYPE_LIST(Out_of_ram, Out_of_caps));
-	GENODE_RPC_THROW(Rpc_subject_info, Subject_info, subject_info,
+	GENODE_RPC_THROW(Rpc_cpu_info, CPU_info, cpu_info,
 	                 GENODE_TYPE_LIST(Nonexistent_subject), Subject_id);
+	GENODE_RPC_THROW(Rpc_ram_info, RAM_info, ram_info,
+	                 GENODE_TYPE_LIST(Nonexistent_subject), Subject_id);
+	GENODE_RPC_THROW(Rpc_scheduler_info, SCHEDULER_info, scheduler_info,
+	                 GENODE_TYPE_LIST(Nonexistent_subject), Subject_id);
+	GENODE_RPC_THROW(Rpc_deploy_thread, int, deploy_thread,
+		                 GENODE_TYPE_LIST(Nonexistent_subject), Threads, unsigned); //gmc
 	GENODE_RPC_THROW(Rpc_buffer, Dataspace_capability, buffer,
 	                 GENODE_TYPE_LIST(Nonexistent_subject, Subject_not_traced),
 	                 Subject_id);
@@ -152,8 +162,8 @@ struct Genode::Trace::Session : Genode::Session
 
 	GENODE_RPC_INTERFACE(Rpc_dataspace, Rpc_alloc_policy, Rpc_policy,
 	                     Rpc_unload_policy, Rpc_trace, Rpc_rule, Rpc_pause,
-	                     Rpc_resume, Rpc_subjects, Rpc_subject_info, Rpc_buffer,
-	                     Rpc_free);
+	                     Rpc_resume, Rpc_subjects, Rpc_cpu_info, Rpc_ram_info,
+	                     Rpc_scheduler_info, Rpc_buffer, Rpc_free);
 };
 
 #endif /* _INCLUDE__TRACE_SESSION__TRACE_SESSION_H_ */

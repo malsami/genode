@@ -16,10 +16,19 @@
 #include <dataspace/capability.h>
 #include <base/rpc_client.h>
 
+/* Fiasco includes */
+namespace Fiasco {
+#include <l4/sys/debugger.h>
+#include <l4/sys/factory.h>
+#include <l4/sys/irq.h>
+#include <l4/sys/scheduler.h>
+#include <l4/sys/thread.h>
+#include <l4/sys/types.h>
+}
 
 using namespace Genode;
 using namespace Genode::Trace;
-
+using namespace Fiasco;
 
 Dataspace_capability Session_component::dataspace()
 {
@@ -120,9 +129,22 @@ void Session_component::resume(Subject_id subject_id)
 }
 
 
-Subject_info Session_component::subject_info(Subject_id subject_id)
+CPU_info Session_component::cpu_info(Subject_id subject_id)
 {
-	return _subjects.lookup_by_id(subject_id)->info();
+	return _subjects.lookup_by_id(subject_id)->info_cpu();
+
+}
+
+RAM_info Session_component::ram_info(Subject_id subject_id)
+{
+	return _subjects.lookup_by_id(subject_id)->info_ram();
+
+}
+
+SCHEDULER_info Session_component::scheduler_info(Subject_id subject_id)
+{
+	return _subjects.lookup_by_id(subject_id)->info_scheduler();
+
 }
 
 

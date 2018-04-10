@@ -288,6 +288,10 @@ namespace {
 			 * parent resource mechanism
 			 */
 			init_parent_resource_requests(env);
+			
+			// Modification for Checkpoint/Restore (rtcr): Force creation of LOG session (which is created lazily)
+			Genode::log("Initializing LOG session");
+
 
 			Component::construct(env);
 		}

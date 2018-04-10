@@ -52,10 +52,19 @@ class Genode::Cpu_session_component : public  Rpc_object<Cpu_session>,
 		unsigned                   _priority;               /* priority of threads
 		                                                       created with this
 		                                                       session */
+		unsigned                   _deadline;
 		Affinity::Location         _location;               /* CPU affinity of this 
 		                                                       session */
 		Trace::Source_registry    &_trace_sources;
 		Trace::Control_area        _trace_control_area { };
+
+    long*                       _sched_type;
+
+    enum {
+      ALL = 0,
+      FIXED_PRIO = 1,
+      DEADLINE = 2
+    };
 
 		/*
 		 * Members for quota accounting
@@ -163,6 +172,8 @@ class Genode::Cpu_session_component : public  Rpc_object<Cpu_session>,
 		 ** CPU session interface **
 		 ***************************/
 
+		int set_sched_type(unsigned core, unsigned sched_type);
+		int get_sched_type(unsigned core);
 		Thread_capability create_thread(Capability<Pd_session>, Name const &,
 		                                Affinity::Location, Weight, addr_t) override;
 		void kill_thread(Thread_capability) override;
@@ -172,7 +183,11 @@ class Genode::Cpu_session_component : public  Rpc_object<Cpu_session>,
 		int ref_account(Cpu_session_capability c) override;
 		int transfer_quota(Cpu_session_capability, size_t) override;
 		Quota quota() override;
-
+		void set(Ram_session_capability ram_cap);
+		void deploy_queue(Genode::Dataspace_capability ds);
+		void rq(Genode::Dataspace_capability ds);
+		void dead(Genode::Dataspace_capability ds);
+    		void killed();
 		Capability<Native_cpu> native_cpu() override { return _native_cpu.cap(); }
 };
 

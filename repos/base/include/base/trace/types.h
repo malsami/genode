@@ -38,7 +38,10 @@ namespace Genode { namespace Trace {
 	struct Policy_id;
 	struct Subject_id;
 	struct Execution_time;
-	struct Subject_info;
+	struct CPU_info;
+	struct RAM_info;
+	struct SCHEDULER_info;
+	struct Threads;
 } }
 
 
@@ -87,7 +90,7 @@ struct Genode::Trace::Execution_time
 /**
  * Subject information
  */
-class Genode::Trace::Subject_info
+class Genode::Trace::CPU_info
 {
 	public:
 
@@ -108,34 +111,125 @@ class Genode::Trace::Subject_info
 
 	private:
 
-		Session_label      _session_label  { };
-		Thread_name        _thread_name    { };
-		State              _state          { INVALID };
-		Policy_id          _policy_id      { 0 };
-		Execution_time     _execution_time { 0 };
-		Affinity::Location _affinity       { };
+		State              _state;
+		Policy_id          _policy_id;
+		Execution_time     _execution_time;
+		Affinity::Location _affinity;
+		unsigned long long _start_time;
+		unsigned long long _arrival_time;
+		unsigned long long _kill_time;
+		unsigned	   _prio;
+		unsigned	   _id;
+		unsigned	   _foc_id;	
+		int		   _pos_rq;
+
 
 	public:
 
-		Subject_info() { }
+		CPU_info() : _state(INVALID) { }
 
-		Subject_info(Session_label const &session_label,
-		             Thread_name   const &thread_name,
-		             State state, Policy_id policy_id,
+		CPU_info(    State state, Policy_id policy_id,
 		             Execution_time execution_time,
-		             Affinity::Location affinity)
+		             Affinity::Location affinity,
+			     unsigned long long start_time,
+			     unsigned long long arrival_time,
+			     unsigned long long kill_time,
+			     unsigned prio,
+			     unsigned id,
+			     unsigned foc_id,
+			     int pos_rq
+				)
 		:
-			_session_label(session_label), _thread_name(thread_name),
 			_state(state), _policy_id(policy_id),
-			_execution_time(execution_time), _affinity(affinity)
+			_execution_time(execution_time), _affinity(affinity), _start_time(start_time), _arrival_time(arrival_time), _kill_time(kill_time), _prio(prio), _id(id), _foc_id(foc_id), _pos_rq(pos_rq)
 		{ }
 
-		Session_label const &session_label()  const { return _session_label; }
-		Thread_name   const &thread_name()    const { return _thread_name; }
 		State                state()          const { return _state; }
 		Policy_id            policy_id()      const { return _policy_id; }
 		Execution_time       execution_time() const { return _execution_time; }
 		Affinity::Location   affinity()       const { return _affinity; }
+		unsigned long long   start_time()     const { return _start_time; }
+		unsigned long long   arrival_time()   const { return _arrival_time; }
+		unsigned long long   kill_time()      const { return _kill_time; }
+		unsigned	     prio()	      const { return _prio; }
+		unsigned	     id()	      const { return _id; }
+		unsigned	     foc_id()	      const { return _foc_id; }
+		int		     pos_rq()	      const { return _pos_rq; }
+
+};
+
+class Genode::Trace::RAM_info
+{
+	private:
+
+		Session_label      _session_label;
+		Thread_name        _thread_name;
+		size_t		   _ram_quota;
+		size_t		   _ram_used;
+
+	public:
+
+		RAM_info() {}
+
+		RAM_info(Session_label const &session_label,
+		             Thread_name   const &thread_name,
+			     size_t ram_quota,
+			     size_t ram_used
+				)
+		:
+			_session_label(session_label), _thread_name(thread_name),
+			_ram_quota(ram_quota), _ram_used(ram_used)
+		{ }
+
+		Session_label const &session_label()  const { return _session_label; }
+		Thread_name   const &thread_name()    const { return _thread_name; }
+		size_t		     ram_quota()      const { return _ram_quota; }
+		size_t		     ram_used()	      const { return _ram_used; }
+};
+
+class Genode::Trace::SCHEDULER_info
+{
+	private:
+
+		Execution_time	_idle0;
+		Execution_time	_idle1;
+		Execution_time	_idle2;
+		Execution_time	_idle3;
+		bool		_core0_is_online;
+		bool		_core1_is_online;
+		bool		_core2_is_online;
+		bool		_core3_is_online;
+		unsigned	_num_cores;
+		
+
+	public:
+
+		SCHEDULER_info() {}
+
+		SCHEDULER_info(Execution_time idle0,
+				Execution_time idle1,
+				Execution_time idle2,
+				Execution_time idle3,
+				bool core0_is_online,
+				bool core1_is_online,
+				bool core2_is_online,
+				bool core3_is_online,
+				unsigned num_cores)
+		:
+			_idle0(idle0), _idle1(idle1), _idle2(idle2), _idle3(idle3), _core0_is_online(core0_is_online), _core1_is_online(core1_is_online),
+			_core2_is_online(core2_is_online), _core3_is_online(core3_is_online),
+			_num_cores(num_cores)
+		{}
+
+		Execution_time		idle0()			const { return _idle0; }
+		Execution_time		idle1()			const { return _idle1; }
+		Execution_time		idle2()			const { return _idle2; }
+		Execution_time		idle3()			const { return _idle3; }
+		bool			core0_is_online()	const { return _core0_is_online; }
+		bool			core1_is_online()	const { return _core1_is_online; }
+		bool			core2_is_online()	const { return _core2_is_online; }
+		bool			core3_is_online()	const { return _core3_is_online; }
+		unsigned		num_cores()		const { return _num_cores; }
 };
 
 #endif /* _INCLUDE__BASE__TRACE__TYPES_H_ */
