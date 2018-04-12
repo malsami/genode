@@ -29,7 +29,7 @@ $(error L4_BUILD_ARCH undefined, architecture not supported)
 endif
 
 L4_BUILD_OPT = CROSS_COMPILE=$(CROSS_DEV_PREFIX)
-L4_PKG_DIR  := $(call select_from_ports,foc)/src/kernel/foc/l4/pkg
+L4_PKG_DIR  := $(call select_from_ports,focnados)/src/kernel/foc/l4/pkg
 PKG_TAGS     = $(addsuffix .tag,$(PKGS))
 
 BUILD_OUTPUT_FILTER = 2>&1 | sed "s~^~      [$*]  ~"
