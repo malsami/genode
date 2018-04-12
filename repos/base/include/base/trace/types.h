@@ -111,17 +111,17 @@ class Genode::Trace::CPU_info
 
 	private:
 
-		State              _state;
-		Policy_id          _policy_id;
-		Execution_time     _execution_time;
-		Affinity::Location _affinity;
-		unsigned long long _start_time;
-		unsigned long long _arrival_time;
-		unsigned long long _kill_time;
-		unsigned	   _prio;
-		unsigned	   _id;
-		unsigned	   _foc_id;	
-		int		   _pos_rq;
+		State              _state { };
+		Policy_id          _policy_id { };
+		Execution_time     _execution_time { };
+		Affinity::Location _affinity { };
+		unsigned long long _start_time { };
+		unsigned long long _arrival_time { };
+		unsigned long long _kill_time { };
+		unsigned	   _prio { };
+		unsigned	   _id { };
+		unsigned	   _foc_id { };	
+		int		   _pos_rq { };
 
 
 	public:
@@ -162,10 +162,10 @@ class Genode::Trace::RAM_info
 {
 	private:
 
-		Session_label      _session_label;
-		Thread_name        _thread_name;
-		size_t		   _ram_quota;
-		size_t		   _ram_used;
+		Session_label      _session_label { };
+		Thread_name        _thread_name { };
+		size_t		   _ram_quota { };
+		size_t		   _ram_used { };
 
 	public:
 
@@ -191,15 +191,15 @@ class Genode::Trace::SCHEDULER_info
 {
 	private:
 
-		Execution_time	_idle0;
-		Execution_time	_idle1;
-		Execution_time	_idle2;
-		Execution_time	_idle3;
-		bool		_core0_is_online;
-		bool		_core1_is_online;
-		bool		_core2_is_online;
-		bool		_core3_is_online;
-		unsigned	_num_cores;
+		Execution_time	_idle0 { };
+		Execution_time	_idle1 { };
+		Execution_time	_idle2 { };
+		Execution_time	_idle3 { };
+		bool		_core0_is_online { };
+		bool		_core1_is_online { };
+		bool		_core2_is_online { };
+		bool		_core3_is_online { };
+		unsigned	_num_cores { };
 		
 
 	public:
