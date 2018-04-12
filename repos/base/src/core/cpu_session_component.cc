@@ -23,31 +23,7 @@
 #include <pd_session_component.h>
 #include <platform_generic.h>
 
-#include <ram_session/connection.h>
-
 using namespace Genode;
-
-int Cpu_session_component::set_sched_type(unsigned core, unsigned sched_type){
-	if (core >= platform()->affinity_space().total()){
-		PERR("Core not available");
-		return -1;
-	}
-	if (sched_type < 0 || sched_type > 3){
-		PERR("sched_type not known");
-		return -2;
-	}
-
-	_sched_type[core] = sched_type;
-	return 0;
-}
-
-int Cpu_session_component::get_sched_type(unsigned core){
-	if (core >= platform()->affinity_space().total()){
-		PERR("Core not available");
-		return -1;
-	}
-	return _sched_type[core];
-}
 
 Thread_capability Cpu_session_component::create_thread(Capability<Pd_session> pd_cap,
                                                        Name const &name,
@@ -86,7 +62,7 @@ Thread_capability Cpu_session_component::create_thread(Capability<Pd_session> pd
 				cap(), *_thread_ep, *_pager_ep, *pd, _trace_control_area,
 				_trace_sources, weight, _weight_to_quota(weight.value),
 				_thread_affinity(affinity), _label, thread_name,
-				_priority, deadline, utcb);
+				_priority, _deadline, utcb);
 	};
 
 	try { _thread_ep->apply(pd_cap, create_thread_lambda); }
@@ -275,7 +251,7 @@ Cpu_session_component::Cpu_session_component(Rpc_entrypoint         *session_ep,
 	_session_ep(session_ep),
 	_thread_ep(thread_ep), _pager_ep(pager_ep),
 	_md_alloc(md_alloc, remaining_session_ram_quota(args)),
-	_thread_alloc(&_md_alloc), _priority(0), deadline(0),
+	_thread_alloc(&_md_alloc), _priority(0), _deadline(0),
 
 	/* map affinity to a location within the physical affinity space */
 	_location(affinity.scale_to(platform()->affinity_space())),
@@ -295,8 +271,6 @@ Cpu_session_component::Cpu_session_component(Rpc_entrypoint         *session_ep,
 	if (a.valid()) {
 		_deadline = a.ulong_value(0);
 	}
-	/*Create Array with number_of_core Elements for storing scheduling strategy*/
-	_sched_type = new (Genode::env()->heap()) long[platform()->affinity_space().total()];
 }
 
 
@@ -428,7 +402,7 @@ void Cpu_session_component::killed()
 	//get last thread, which is also main thread
 	while(thread->next())
 	{
-		PDBG("%s",thread->platform_thread().name());
+		//PDBG("%s",thread->platform_thread().name());
 		thread=thread->next();
 	}
 	thread->platform_thread().killed();
