@@ -17,7 +17,6 @@
 #include <base/thread.h>
 #include <base/sleep.h>
 #include <foc/native_capability.h>
-#include <foc_native_pd/client.h>
 #include <base/env.h>
 
 /* base-internal includes */
@@ -52,11 +51,11 @@ void prepare_reinit_main_thread()
 /**
  * Sets cap_map_info in Foc_native_pd
  */
-void init_pd()
+/*void init_pd()
 {
        using namespace Genode;
 
-       Capability<Pd_session::Native_pd> native_pd_cap =  env()->pd_session()->native_pd();
+       Capability<Pd_session::Native_pd> native_pd_cap =  env_deprecated()->pd_session()->native_pd();
        // Avoid core capability
        if(native_pd_cap.valid())
        {
@@ -65,7 +64,7 @@ void init_pd()
                //log("from thread_bootstrap: ", cap_idx_alloc());
        }
 
-}
+}*/
 // END Modification for Checkpoint/Restore (rtcr)
 
 /************
