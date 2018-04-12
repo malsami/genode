@@ -104,7 +104,7 @@ extern "C" void init_main_thread()
 	/*
 	 * Initialise variables in native PD before log session
 	 */
-	init_pd();
+	//init_pd();
 	// END Modification for Checkpoint/Restore (rtcr)
 	init_log();
 	/* create a thread object for the main thread */
