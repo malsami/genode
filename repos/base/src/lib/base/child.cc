@@ -603,7 +603,7 @@ void Child::deliver_session_cap(Server::Id id, Session_capability cap)
 
 void Child::exit(int exit_value)
 {
-	Cpu_session_client(cpu_session_cap()).killed();
+	Cpu_session_client(env_deprecated()->cpu_session_cap()).killed();
 	/*
 	 * This function receives the hint from the child that now, its a good time
 	 * to kill it. An inherited child class could use this hint to schedule the
