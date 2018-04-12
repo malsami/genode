@@ -6,7 +6,7 @@
 # userland (L4re) that comes with Fiasco.OC.
 #
 
-L4_SRC_DIR   := $(call select_from_ports,foc)/src/kernel/foc
+L4_SRC_DIR   := $(call select_from_ports,focnados)/src/kernel/foc
 L4_BUILD_DIR := $(shell pwd)/build
 
 #
