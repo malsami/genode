@@ -4,7 +4,7 @@ PROJECT		?= hello
 TOOLCHAIN_TARGET    ?= arm
 
 # options: see tool/create_builddir
-GENODE_TARGET       ?= foc_pbxa9
+GENODE_TARGET       ?= focnados_pbxa9
 
 ifneq (,$(findstring if13praktikum, $(shell groups)))
 	VAGRANT_BUILD_DIR         ?= $(shell pwd)/build
@@ -36,7 +36,7 @@ toolchain:
 
 # ================================================================
 # Download Genode external sources. Only needs to be done once per system.
-PORTS_LST = foc libc lwip stdcxx dde_linux
+PORTS_LST = focnados libc lwip stdcxx dde_linux
 ports:
 ifeq (jenkins, $(USER))
 	./tool/ports/prepare_port -j $(PORTS_LST)
