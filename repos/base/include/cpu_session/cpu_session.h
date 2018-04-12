@@ -100,22 +100,6 @@ struct Genode::Cpu_session : Session
 	                                        Affinity::Location     affinity,
 	                                        Weight                 weight,
 	                                        addr_t                 utcb = 0) = 0;
-	/**
-	 * Set sched_type for the given core
-	 * 0 = Allow all Sched_types,
-	 * 1 = FixedPrio
-	 * 2 = EDF
-	 */
-	virtual int set_sched_type(unsigned core = 0, unsigned sched_type = 0) = 0;
-
-	/**
-	 * Get sched_type for the given core
-	 * 0 = Allow all Sched_types,
-	 * 1 = FixedPrio
-	 * 2 = EDF
-	 */
-	virtual int get_sched_type(unsigned core = 0) = 0;
-
 	
 	/**
 	 * Kill an existing thread
@@ -242,8 +226,6 @@ struct Genode::Cpu_session : Session
 	 */
 	virtual Capability<Native_cpu> native_cpu() = 0;
 
-	virtual void set(Ram_session_capability ram_cap) = 0;
-
 	virtual void deploy_queue(Genode::Dataspace_capability ds) = 0;
 
 	virtual void rq(Genode::Dataspace_capability ds) = 0;
@@ -261,9 +243,6 @@ struct Genode::Cpu_session : Session
 	                 Capability<Pd_session>, Name const &, Affinity::Location,
 	                 Weight, addr_t);
 
-	GENODE_RPC(Rpc_set_sched_type, int, set_sched_type, unsigned, unsigned);
-	GENODE_RPC(Rpc_get_sched_type, int, get_sched_type, unsigned);
-	GENODE_RPC(Rpc_set, void, set, Ram_session_capability);
 	GENODE_RPC(Rpc_deploy_queue, void, deploy_queue, Genode::Dataspace_capability);
 	GENODE_RPC(Rpc_rq, void, rq, Genode::Dataspace_capability);
 	GENODE_RPC(Rpc_dead, void, dead, Genode::Dataspace_capability);
@@ -277,10 +256,9 @@ struct Genode::Cpu_session : Session
 	GENODE_RPC(Rpc_quota, Quota, quota);
 	GENODE_RPC(Rpc_native_cpu, Capability<Native_cpu>, native_cpu);
 
-	GENODE_RPC_INTERFACE(Rpc_create_thread, Rpc_set_sched_type,
-	                     Rpc_get_sched_type, Rpc_kill_thread, Rpc_exception_sigh,
+	GENODE_RPC_INTERFACE(Rpc_create_thread, Rpc_kill_thread, Rpc_exception_sigh,
 	                     Rpc_affinity_space, Rpc_trace_control, Rpc_ref_account,
-	                     Rpc_transfer_quota, Rpc_quota, Rpc_native_cpu, Rpc_set,
+	                     Rpc_transfer_quota, Rpc_quota, Rpc_native_cpu,
 	                     Rpc_deploy_queue, Rpc_rq, Rpc_dead, Rpc_killed);
 
 };
