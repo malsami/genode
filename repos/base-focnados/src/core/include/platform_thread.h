@@ -54,12 +54,12 @@ namespace Genode {
 			Platform_pd       *_platform_pd;    /* protection domain thread
 			                                      is bound to */
 			Pager_object      *_pager_obj;
-			unsigned           _prio;
-			unsigned           _dl;
-			long unsigned int  _id;
-			unsigned long long _start_time;
-			unsigned long long _arrival_time;
-			unsigned long long _kill_time;
+			unsigned           _prio { };
+			unsigned           _dl { };
+			long unsigned int  _id { };
+			unsigned long long _start_time { };
+			unsigned long long _arrival_time { };
+			unsigned long long _kill_time { };
 
 			Affinity::Location _location { };
 
