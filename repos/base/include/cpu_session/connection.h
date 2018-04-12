@@ -62,7 +62,7 @@ struct Genode::Cpu_connection : Connection<Cpu_session>, Cpu_session_client
 	Cpu_connection(const char *label = "", long priority = DEFAULT_PRIORITY, unsigned deadline=0,
 	               Affinity const &affinity = Affinity())
 	:
-		Connection<Cpu_session>(_session(*env()->parent(), label, affinity, priority, deadline)),
+		Connection<Cpu_session>(_session(*env_deprecated()->parent(), label, affinity, priority, deadline)),
 		Cpu_session_client(cap())
 	{ }
 
