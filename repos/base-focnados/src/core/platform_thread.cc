@@ -204,7 +204,7 @@ Foc_thread_state Platform_thread::state()
 }
 
 // START Modification for Checkpoint/Restore (rtcr)
-void Platform_thread::all_regs(Thread_state const &s)
+/*void Platform_thread::all_regs(Thread_state const &s)
 {
        addr_t regs[17];
 
@@ -228,7 +228,7 @@ Thread_state Platform_thread::all_regs()
        s.utcb = _utcb;
 
        return s;
-}
+}*/
 // END Modification for Checkpoint/Restore (rtcr)
 
 
@@ -254,7 +254,7 @@ void Platform_thread::affinity(Affinity::Location location)
 	else if(_prio>0)
 		params = l4_sched_param_by_type(Fixed_prio, _prio, 0);
 	else{
-		PWRN("wrong scheduling type");
+		warning("wrong scheduling type");
 		return;
 	}
 
@@ -322,7 +322,7 @@ void Platform_thread::_finalize_construction(const char *name)
 		params = l4_sched_param_by_type(Fixed_prio, _prio, 0);
 	}
 	else{
-		PWRN("wrong scheduling type prio:%d deadline:%d", _prio, _dl);
+		warning("wrong scheduling type prio:%d deadline:%d", _prio, _dl);
 		return;
 	}
 	l4_scheduler_run_thread(L4_BASE_SCHEDULER_CAP, _thread.local.data()->kcap(),
@@ -336,7 +336,7 @@ unsigned long long Platform_thread::execution_time() const
 	unsigned long long time = 0;
 
 	if (_utcb) {
-		l4_thread_stats_time(_thread.local.data()->kcap());
+		l4_thread_stats_time(_thread.local.data()->kcap(),&time);
 		time = *(l4_kernel_clock_t*)&l4_utcb_mr()->mr[0];
 	}
 	return time;
@@ -346,7 +346,7 @@ unsigned long long Platform_thread::start_time() const
 {
 	unsigned long long time = 0;
 	if (_utcb) {
-		l4_thread_stats_time(_thread.local.data()->kcap());
+		l4_thread_stats_time(_thread.local.data()->kcap(),&time);
 		time = l4_utcb_mr()->mr[2];
 	}
 	return time;
@@ -384,7 +384,7 @@ unsigned long long Platform_thread::idle(unsigned num) const
 	l4_sched_cpu_set_t cpus = l4_sched_cpu_set(num, 0, 1);
 
 	if (_utcb) {
-		l4_scheduler_idle_time(L4_BASE_SCHEDULER_CAP, &cpus);
+		l4_scheduler_idle_time(L4_BASE_SCHEDULER_CAP, &cpus, &time);
 		time = *(l4_kernel_clock_t*)&l4_utcb_mr()->mr[0];
 	}
 
@@ -408,7 +408,7 @@ unsigned Platform_thread::num_cores() const
 
 void Platform_thread::rq(Genode::Dataspace_capability ds) const
 {
-	int *list = Genode::env()->rm_session()->attach(ds);
+	int *list = Genode::env_deprecated()->rm_session()->attach(ds);
 	l4_scheduler_get_rqs(list[1],list[2],L4_BASE_SCHEDULER_CAP);
 	list[0]=(int)l4_utcb_mr()->mr[0];
 	for(int i=1; i<=2*((int)l4_utcb_mr()->mr[0]);i++)
@@ -471,7 +471,7 @@ void Platform_thread::_set_regs(addr_t* array, addr_t value)
 
 void Platform_thread::dead(Genode::Dataspace_capability ds) const
 {
-	long long unsigned *list = Genode::env()->rm_session()->attach(ds);
+	long long unsigned *list = Genode::env_deprecated()->rm_session()->attach(ds);
 	l4_scheduler_get_dead(L4_BASE_SCHEDULER_CAP);
 	list[0]=(long long unsigned)l4_utcb_mr()->mr[0];
 	for(long long unsigned i=1; i<=2*((long long unsigned)l4_utcb_mr()->mr[0]);i++)
@@ -482,18 +482,19 @@ void Platform_thread::dead(Genode::Dataspace_capability ds) const
 
 void Platform_thread::deploy_queue(Genode::Dataspace_capability ds) const
 {
-	int *list = Genode::env()->rm_session()->attach(ds);
+	int *list = Genode::env_deprecated()->rm_session()->attach(ds);
 	Fiasco::l4_msgtag_t tag = Fiasco::l4_scheduler_deploy_thread(Fiasco::L4_BASE_SCHEDULER_CAP, list);
 	if (Fiasco::l4_error(tag)){
-		PWRN("Scheduling queue has failed!\n");
+		warning("Scheduling queue has failed!\n");
 		return;
 	}
 }
 
 void Platform_thread::killed()
 {
+	unsigned long long time = 0;
 	if (_utcb) {
-		l4_thread_stats_time(_thread.local.data()->kcap());
+		l4_thread_stats_time(_thread.local.data()->kcap(),&time);
 		_kill_time = l4_utcb_mr()->mr[4];
 	}
 }
