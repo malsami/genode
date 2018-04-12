@@ -265,7 +265,7 @@ class Genode::Trace::Subject
 					prio=info.prio;
 					id=info.id;
 					foc_id=info.foc_id;
-					pos_rq=info.pos_rq;
+					pos_rq=-1;
 
 				}
 			}
@@ -286,8 +286,8 @@ class Genode::Trace::Subject
 
 				if (source.is_valid()) {
 					Trace::Source::Info const info = source->info();
-					ram_quota= info.ram_quota;
-					ram_used= info.ram_used;
+					ram_quota= 0;
+					ram_used= 0;
 					label=info.label;
 					name=info.name;
 				}
@@ -313,7 +313,7 @@ class Genode::Trace::Subject
 				Locked_ptr<Source> source(_source);
 
 				if (source.is_valid()) {
-					Trace::Source::Info const info = source->sched_info();
+					Trace::Source::Info const info = source->info();
 					idle0=info.idle0;
 					idle1=info.idle1;
 					idle2=info.idle2;
