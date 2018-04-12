@@ -1,0 +1,4 @@
+# kernel to use
+KERNEL ?= focnados
+
+KERNEL_RUN_OPT(focnados) := $(QEMU_RUN_OPT)
