@@ -204,7 +204,7 @@ Foc_thread_state Platform_thread::state()
 }
 
 // START Modification for Checkpoint/Restore (rtcr)
-/*void Platform_thread::all_regs(Thread_state const &s)
+void Platform_thread::all_regs(Thread_state const &s)
 {
        addr_t regs[17];
 
@@ -228,7 +228,7 @@ Thread_state Platform_thread::all_regs()
        s.utcb = _utcb;
 
        return s;
-}*/
+}
 // END Modification for Checkpoint/Restore (rtcr)
 
 
