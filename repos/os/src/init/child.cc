@@ -541,7 +541,7 @@ void Init::Child::filter_session_args(Service::Name const &service,
 		if (priority & discarded_prio_lsb_bits_mask)
 			warning("priority band too small, losing least-significant priority bits");
 
-		priority >>= _prio_levels_log2;
+		//priority >>= _prio_levels_log2;
 
 		/* assign child priority to the most significant priority bits */
 		priority |= _priority*(Cpu_session::PRIORITY_LIMIT >> _prio_levels_log2);
