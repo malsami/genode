@@ -1,5 +1,5 @@
 TARGET   = platform_drv
-REQUIRES = rpi
+REQUIRES = rpi3
 SRC_CC   = main.cc
 INC_DIR += ${PRG_DIR}
 LIBS     = base
