@@ -22,6 +22,14 @@ CC_OPT += -DCONFIG_USB_DEVICEFS -DCONFIG_HOTPLUG -DDEBUG -DCONFIG_USB_PHY=1 \
           -DCONFIG_GENERIC_PHY=0 -DCONFIG_USB_OTG_WHITELIST=0 \
           -DCONFIG_USB_OTG=0 -DCONFIG_USB_NET_RNDIS_HOST=1
 
+ifneq (,$(findstring rpi2,$(SPECS)))
+	CC_OPT += -DPLATFORM_RPI2
+endif
+
+ifneq (,$(findstring rpi3,$(SPECS)))
+	CC_OPT += -DPLATFORM_RPI3
+endif
+
 CC_WARN = -Wall -Wno-unused-variable -Wno-uninitialized \
           -Wno-unused-function -Wno-overflow
 
