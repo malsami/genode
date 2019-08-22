@@ -2,5 +2,5 @@ LICENSE   := GPLv2
 VERSION   := git
 DOWNLOADS := focnados.git
 URL(focnados)  := https://github.com/malsami/foc.git
-REV(focnados)  := 31f7b4326c8cc38865453e13b3fe02eb91a5555e
+REV(focnados)  := 66d3bd2f1974f023f00ac8e35a94c7330cc6fa9f
 DIR(focnados)  := src/kernel/foc
